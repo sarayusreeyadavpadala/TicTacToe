@@ -4,15 +4,18 @@ const playerXScoreSpan = document.querySelector("#playerXScore");
 const playerOScoreSpan = document.querySelector("#playerOScore");
 const resetBtn = document.querySelector(".resetBtn");
 const toastDiv = document.querySelector(".toast");
-const draws = document.querySelector("#draws");
+const drawsSpan = document.querySelector("#draws");
 
 const playerX = "X";
 const playerO = "O";
 let playerXScore = 0;
 let playerOScore = 0;
+let draws = 0;
 let currentLevel = 1;
 let flag = true;
 let currentPlayer = playerX;
+const playerXImg = "X.png"; 
+const playerOImg = "O.png";
 
 const winCombos = [
   [0, 1, 2],
@@ -45,7 +48,7 @@ function cellClicked(e) {
 
 function addImg(type) {
   const img = document.createElement("img");
-  img.src = `${type}.png`;
+  img.src = type === "X" ? playerXImg : playerOImg;
   return img;
 }
 
@@ -57,6 +60,8 @@ function checkWinner() {
     const cell3 = cells[winCombo[2]];
     if (
       cell1.innerHTML !== "" &&
+      cell2.innerHTML !== "" &&
+      cell3.innerHTML !== "" &&
       cell1.innerHTML === cell2.innerHTML &&
       cell1.innerHTML === cell3.innerHTML
     ) {
@@ -75,6 +80,9 @@ function checkWinner() {
 function checkDraw() {
   if ([...cells].every((cell) => cell.innerHTML !== "")) {
     toast("its a draw");
+    draws++
+    drawsSpan.textContent = draws;
+    flag=false;
     currentLevel++;
     setTimeout(() => {
       reset();
@@ -114,6 +122,8 @@ resetBtn.addEventListener("click", () => {
   currentLevel = 1;
   playerOScore = 0;
   playerXScore = 0;
+  draws = 0;
+  drawsSpan.textContent = draws;
   playerOScoreSpan.textContent = playerOScore;
   playerXScoreSpan.textContent = playerXScore;
   toast("game reset!");
